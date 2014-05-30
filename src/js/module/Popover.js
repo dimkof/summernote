@@ -1,8 +1,14 @@
-define('module/Popover', function () {
+define([
+  'summernote/core/func',
+  'summernote/core/list',
+  'summernote/module/Button'
+], function (func, list, Button) {
   /**
    * Popover (http://getbootstrap.com/javascript/#popovers)
    */
   var Popover = function () {
+    var button = new Button();
+
     /**
      * show popover
      * @param {jQuery} popover
@@ -10,7 +16,10 @@ define('module/Popover', function () {
      */
     var showPopover = function ($popover, elPlaceholder) {
       var $placeholder = $(elPlaceholder);
-      var pos = $placeholder.position(), height = $placeholder.height();
+      var pos = $placeholder.position();
+
+      // include margin
+      var height = $placeholder.outerHeight(true);
 
       // display popover below placeholder.
       $popover.css({
@@ -20,12 +29,17 @@ define('module/Popover', function () {
       });
     };
 
+    var PX_POPOVER_ARROW_OFFSET_X = 20;
+
     /**
      * update current state
      * @param {jQuery} $popover - popover container
      * @param {Object} oStyle - style object
+     * @param {Boolean} isAirMode
      */
-    this.update = function ($popover, oStyle) {
+    this.update = function ($popover, oStyle, isAirMode) {
+      button.update($popover, oStyle);
+
       var $linkPopover = $popover.find('.note-link-popover');
 
       if (oStyle.anchor) {
@@ -42,6 +56,24 @@ define('module/Popover', function () {
       } else {
         $imagePopover.hide();
       }
+
+      if (isAirMode) {
+        var $airPopover = $popover.find('.note-air-popover');
+        if (!oStyle.range.isCollapsed()) {
+          var bnd = func.rect2bnd(list.last(oStyle.range.getClientRects()));
+          $airPopover.css({
+            display: 'block',
+            left: Math.max(bnd.left + bnd.width / 2 - PX_POPOVER_ARROW_OFFSET_X, 0),
+            top: bnd.top + bnd.height
+          });
+        } else {
+          $airPopover.hide();
+        }
+      }
+    };
+
+    this.updateRecentColor = function (elBtn, sEvent, sValue) {
+      button.updateRecentColor(elBtn, sEvent, sValue);
     };
 
     /**

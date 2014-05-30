@@ -1,4 +1,4 @@
-define(['core/func'], function (func) {
+define(['summernote/core/func'], function (func) {
   /**
    * list utils
    */
@@ -34,6 +34,28 @@ define(['core/func'], function (func) {
     var tail = function (array) {
       return array.slice(1);
     };
+
+    /**
+     * returns next item.
+     * @param {Array} array
+     */
+    var next = function (array, item) {
+      var idx = array.indexOf(item);
+      if (idx === -1) { return null; }
+
+      return array[idx + 1];
+    };
+
+    /**
+     * returns prev item.
+     * @param {Array} array
+     */
+    var prev = function (array, item) {
+      var idx = array.indexOf(item);
+      if (idx === -1) { return null; }
+
+      return array[idx - 1];
+    };
   
     /**
      * get sum from a list
@@ -66,7 +88,7 @@ define(['core/func'], function (func) {
      * @param {Array[]}
      */
     var clusterBy = function (array, fn) {
-      if (array.length === 0) { return []; }
+      if (!array.length) { return []; }
       var aTail = tail(array);
       return aTail.reduce(function (memo, v) {
         var aLast = last(memo);
@@ -93,7 +115,8 @@ define(['core/func'], function (func) {
     };
   
     return { head: head, last: last, initial: initial, tail: tail,
-             sum: sum, from: from, compact: compact, clusterBy: clusterBy };
+             prev: prev, next: next, sum: sum, from: from,
+             compact: compact, clusterBy: clusterBy };
   })();
 
   return list;

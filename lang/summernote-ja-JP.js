@@ -5,7 +5,7 @@
         bold: '太字',
         italic: '斜体',
         underline: '下線',
-        strike: '取り消し線',
+        strikethrough: '取り消し線',
         clear: 'クリア',
         height: '文字高',
         size: '大きさ'
@@ -21,7 +21,8 @@
         floatNone: '寄せ解除',
         dragImageHere: 'ここに画像をドラッグしてください',
         selectFromFiles: '画像ファイルを選ぶ',
-        url: 'URLから画像を挿入する'
+        url: 'URLから画像を挿入する',
+        remove: '画像を削除する'
       },
       link: {
         link: 'リンク',

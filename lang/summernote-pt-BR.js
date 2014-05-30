@@ -5,7 +5,7 @@
         bold: 'Negrito',
         italic: 'Itálico',
         underline: 'Sublinhado',
-        strike: 'Riscado',
+        strikethrough: 'Riscado',
         clear: 'Remover estilo da fonte',
         height: 'Altura da linha',
         size: 'Tamanho da fonte'
@@ -29,7 +29,8 @@
         unlink: 'Remover link',
         edit: 'Editar',
         textToDisplay: 'Texto para exibir',
-        url: 'Para qual URL esse link leva?'
+        url: 'Para qual URL esse link leva?',
+	    	openInNewWindow: 'Abrir em uma nova janela'
       },
       video: {
         video: 'Vídeo',

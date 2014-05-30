@@ -5,9 +5,12 @@
         bold: 'Gras',
         italic: 'Italique',
         underline: 'Souligné',
-        strike: 'Barré',
+        strikethrough: 'Barré',
+        superscript: 'Exposant',
+        subscript: 'Indicé',
         clear: 'Effacer la mise en forme',
         height: 'Interligne',
+        name: 'Famille de police',
         size: 'Taille de police'
       },
       image: {
@@ -21,7 +24,8 @@
         floatNone: 'Pas d\'alignement',
         dragImageHere: 'Faites glisser une image avec la souris dans ce cadre',
         selectFromFiles: 'Choisir un fichier',
-        url: 'URL de l\'image'
+        url: 'URL de l\'image',
+        remove: 'Supprimer l\'image'
       },
       link: {
         link: 'Lien',

@@ -1,7 +1,7 @@
 define([
-  'core/agent', 'core/dom',
-  'settings',
-  'EventHandler', 'Renderer'
+  'summernote/core/agent', 'summernote/core/dom',
+  'summernote/settings',
+  'summernote/EventHandler', 'summernote/Renderer'
 ], function (agent, dom, settings, EventHandler, Renderer) {
   // jQuery namespace for summernote
   $.summernote = $.summernote || {};
@@ -25,7 +25,7 @@ define([
      */
     summernote: function (options) {
       // extend default options
-      options = $.extend($.summernote.options, options);
+      options = $.extend({}, $.summernote.options, options);
 
       this.each(function (idx, elHolder) {
         var $holder = $(elHolder);
@@ -45,13 +45,13 @@ define([
       });
 
       // focus on first editable element
-      if (this.first() && options.focus) {
+      if (this.first().length && options.focus) {
         var info = renderer.layoutInfoFromHolder(this.first());
         info.editable.focus();
       }
 
       // callback on init
-      if (this.length > 0 && options.oninit) {
+      if (this.length && options.oninit) {
         options.oninit();
       }
 
@@ -69,7 +69,7 @@ define([
       // get the HTML contents of note
       if (sHTML === undefined) {
         var $holder = this.first();
-        if ($holder.length === 0) { return; }
+        if (!$holder.length) { return; }
         var info = renderer.layoutInfoFromHolder($holder);
         if (!!(info && info.editable)) {
           var bCodeview = info.editor.hasClass('codeview');

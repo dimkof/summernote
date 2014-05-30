@@ -3,7 +3,7 @@
  * (c) 2013~ Alan Hong
  * summernote may be freely distributed under the MIT license./
  */
-define(['jquery', 'core/dom', 'core/func'], function ($, dom, func) {
+define(['jquery', 'summernote/core/dom', 'summernote/core/func'], function ($, dom, func) {
   return function () {
     test('dom.ancestor', function () {
       var $cont, $b, elB;
@@ -35,11 +35,34 @@ define(['jquery', 'core/dom', 'core/func'], function ($, dom, func) {
 
       deepEqual(dom.listAncestor($b[0], function (node) {
         return node === $i[0];
-      }), [$b[0], $u[0], $s[0], $i[0]], 'listAncestor from b to i');
+      }), [$b[0], $u[0], $s[0], $i[0]], 'listAncestor from b to i should returns [$b, $u, $s, $i]');
 
       deepEqual(dom.listAncestor($u[0], function (node) {
         return node === $s[0];
-      }), [$u[0], $s[0]], 'listAncestor from u to s');
+      }), [$u[0], $s[0]], 'listAncestor from u to s should returns [$u, $s]');
+
+    });
+
+    test('dom.listDescendant', function () {
+      var $cont, $b, $u, $s, $i;
+
+      $cont = $('<div><b></b><u></u><s></s><i></i></div>'); //busi
+      $b = $cont.find('b');
+      $u = $cont.find('u');
+      $s = $cont.find('s');
+      $i = $cont.find('i');
+
+      deepEqual(
+        dom.listDescendant($cont[0]), [$b[0], $u[0], $s[0], $i[0]],
+        'listDescendant($cont) should returns [$b, $u, $s, $i]'
+      );
+
+      deepEqual(
+        dom.listDescendant($cont[0], function (node) {
+          return node.nodeName === 'B' || node.nodeName === 'S';
+        }),
+        [$b[0], $s[0]], 'listDescendant($cont, pred(b,s) should returns [$b, $s]'
+      );
 
     });
 

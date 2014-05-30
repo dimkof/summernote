@@ -1,5 +1,5 @@
 define([
-  'core/func', 'core/list', 'core/dom'
+  'summernote/core/func', 'summernote/core/list', 'summernote/core/dom'
 ], function (func, list, dom) {
   /**
    * range module
@@ -149,6 +149,14 @@ define([
         }));
         return $.map(list.clusterBy(aMatched, func.eq2), list.head);
       };
+
+      /**
+       * returns commonAncestor of range
+       * @return {Element} - commonAncestor
+       */
+      this.commonAncestor = function () {
+        return dom.commonAncestor(sc, ec);
+      };
       
       /**
        * makeIsOn: return isOn(pred) function
@@ -156,7 +164,7 @@ define([
       var makeIsOn = function (pred) {
         return function () {
           var elAncestor = dom.ancestor(sc, pred);
-          return elAncestor && (elAncestor === dom.ancestor(ec, pred));
+          return !!elAncestor && (elAncestor === dom.ancestor(ec, pred));
         };
       };
   
@@ -166,6 +174,8 @@ define([
       this.isOnList = makeIsOn(dom.isList);
       // isOnAnchor: judge whether range is on anchor node or not
       this.isOnAnchor = makeIsOn(dom.isAnchor);
+      // isOnAnchor: judge whether range is on cell node or not
+      this.isOnCell = makeIsOn(dom.isCell);
       // isCollapsed: judge whether range was collapsed
       this.isCollapsed = function () { return sc === ec && so === eo; };
 
@@ -187,12 +197,24 @@ define([
         return bW3CRangeSupport ? nativeRng.toString() : nativeRng.text;
       };
   
-      // bookmark: offsetPath bookmark
+      /**
+       * create offsetPath bookmark
+       * @param {Element} elEditable
+       */
       this.bookmark = function (elEditable) {
         return {
           s: { path: dom.makeOffsetPath(elEditable, sc), offset: so },
           e: { path: dom.makeOffsetPath(elEditable, ec), offset: eo }
         };
+      };
+
+      /**
+       * getClientRects
+       * @return {Rect[]}
+       */
+      this.getClientRects = function () {
+        var nativeRng = nativeRange();
+        return nativeRng.getClientRects();
       };
     };
   
@@ -206,7 +228,7 @@ define([
        * @param {Number} eo - end offset
        */
       create : function (sc, so, ec, eo) {
-        if (arguments.length === 0) { // from Browser Selection
+        if (!arguments.length) { // from Browser Selection
           if (bW3CRangeSupport) { // webkit, firefox
             var selection = document.getSelection();
             if (selection.rangeCount === 0) { return null; }

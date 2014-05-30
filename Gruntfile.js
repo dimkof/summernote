@@ -75,12 +75,13 @@ module.exports = function (grunt) {
         options: {
           port: 3000,
           livereload: true,
-          middleware: function (connect, options) {
-            return [
+          middleware: function (connect, options, middlewares) {
+            middlewares = middlewares || [];
+            return middlewares.concat([
               require('connect-livereload')(), // livereload middleware
-              connect.static(options.base),    // serve static files
+              connect['static'](options.base),    // serve static files
               connect.directory(options.base)  // make empty directories browsable
-            ];
+            ]);
           },
           open: 'http://localhost:3000'
         }
@@ -91,7 +92,7 @@ module.exports = function (grunt) {
     watch: {
       all: {
         files: ['src/less/*.less', 'src/js/**/*.js'],
-        tasks: ['recess', 'build', 'jshint', 'qunit'],
+        tasks: ['recess', 'jshint', 'qunit'],
         options: {
           livereload: true
         }
@@ -109,7 +110,7 @@ module.exports = function (grunt) {
   grunt.loadTasks('build');
 
   // test: unit test on test folder
-  grunt.registerTask('test', ['build', 'jshint', 'qunit']);
+  grunt.registerTask('test', ['jshint', 'qunit']);
 
   // dist
   grunt.registerTask('dist', ['build', 'test', 'uglify', 'recess']);

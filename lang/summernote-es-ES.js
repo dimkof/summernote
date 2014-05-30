@@ -2,10 +2,11 @@
   $.extend($.summernote.lang, {
     'es-ES': {
       font: {
+        name:'Fuente',
         bold: 'Negrita',
         italic: 'Itálica',
         underline: 'Subrayado',
-        strike: 'Tachado',
+        strikethrough: 'Tachado',
         clear: 'Quitar estilo de fuente',
         height: 'Altura de línea',
         size: 'Tamaño de la fuente'

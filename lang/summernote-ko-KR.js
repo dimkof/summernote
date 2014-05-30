@@ -5,9 +5,10 @@
         bold: '굵게',
         italic: '기울임꼴',
         underline: '밑줄',
-        strike: '취소선',
+        strikethrough: '취소선',
         clear: '글자 효과 없애기',
         height: '줄간격',
+        name: '글꼴',
         size: '글자 크기'
       },
       image: {
@@ -21,7 +22,8 @@
         floatNone: '정렬하지 않음',
         dragImageHere: '사진을 이곳으로 끌어오세요',
         selectFromFiles: '파일 선택',
-        url: '사진 URL'
+        url: '사진 URL',
+        remove: '사진 삭제'
       },
       link: {
         link: '링크',

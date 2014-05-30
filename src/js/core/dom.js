@@ -1,4 +1,4 @@
-define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
+define(['summernote/core/func', 'summernote/core/list', 'summernote/core/agent'], function (func, list, agent) {
   /**
    * Dom functions
    */
@@ -24,20 +24,40 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
      * @return {Object}
      */
     var buildLayoutInfo = function ($editor) {
-      var makeFinder = function (sClassName) {
-        return function () { return $editor.find(sClassName); };
-      };
-      return {
-        editor: function () { return $editor; },
-        dropzone: makeFinder('.note-dropzone'),
-        toolbar: makeFinder('.note-toolbar'),
-        editable: makeFinder('.note-editable'),
-        codable: makeFinder('.note-codable'),
-        statusbar: makeFinder('.note-statusbar'),
-        popover: makeFinder('.note-popover'),
-        handle: makeFinder('.note-handle'),
-        dialog: makeFinder('.note-dialog')
-      };
+      var makeFinder;
+
+      // air mode
+      if ($editor.hasClass('note-air-editor')) {
+        var id = list.last($editor.attr('id').split('-'));
+        makeFinder = function (sIdPrefix) {
+          return function () { return $(sIdPrefix + id); };
+        };
+
+        return {
+          editor: function () { return $editor; },
+          editable: function () { return $editor; },
+          popover: makeFinder('#note-popover-'),
+          handle: makeFinder('#note-handle-'),
+          dialog: makeFinder('#note-dialog-')
+        };
+
+      // frame mode
+      } else {
+        makeFinder = function (sClassName) {
+          return function () { return $editor.find(sClassName); };
+        };
+        return {
+          editor: function () { return $editor; },
+          dropzone: makeFinder('.note-dropzone'),
+          toolbar: makeFinder('.note-toolbar'),
+          editable: makeFinder('.note-editable'),
+          codable: makeFinder('.note-codable'),
+          statusbar: makeFinder('.note-statusbar'),
+          popover: makeFinder('.note-popover'),
+          handle: makeFinder('.note-handle'),
+          dialog: makeFinder('.note-dialog')
+        };
+      }
     };
 
     /**
@@ -58,6 +78,10 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
   
     var isList = function (node) {
       return node && /^UL|^OL/.test(node.nodeName);
+    };
+
+    var isCell = function (node) {
+      return node && /^TD|^TH/.test(node.nodeName);
     };
   
     /**
@@ -118,18 +142,19 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
       var aNode = [];
   
       var bStart = false, bEnd = false;
-      var fnWalk = function (node) {
+
+      // DFS(depth first search) with commonAcestor.
+      (function fnWalk(node) {
         if (!node) { return; } // traverse fisnish
         if (node === nodeA) { bStart = true; } // start point
         if (bStart && !bEnd) { aNode.push(node); } // between
         if (node === nodeB) { bEnd = true; return; } // end point
-  
+
         for (var idx = 0, sz = node.childNodes.length; idx < sz; idx++) {
           fnWalk(node.childNodes[idx]);
         }
-      };
+      })(commonAncestor(nodeA, nodeB));
   
-      fnWalk(commonAncestor(nodeA, nodeB)); // DFS with commonAcestor.
       return aNode;
     };
   
@@ -154,7 +179,7 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
      * listing next siblings (until predicate hit).
      *
      * @param {Element} node
-     * @param {Function} pred [optional] - predicate function
+     * @param {Function} [pred] - predicate function
      */
     var listNext = function (node, pred) {
       pred = pred || func.fail;
@@ -166,6 +191,29 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
         node = node.nextSibling;
       }
       return aNext;
+    };
+
+    /**
+     * listing descendant nodes
+     *
+     * @param {Element} node
+     * @param {Function} [pred] - predicate function
+     */
+    var listDescendant = function (node, pred) {
+      var aDescendant = [];
+      pred = pred || func.ok;
+
+      // start DFS(depth first search) with node
+      (function fnWalk(current) {
+        if (node !== current && pred(current)) {
+          aDescendant.push(current);
+        }
+        for (var idx = 0, sz = current.childNodes.length; idx < sz; idx++) {
+          fnWalk(current.childNodes[idx]);
+        }
+      })(node);
+
+      return aDescendant;
     };
   
     /**
@@ -323,6 +371,8 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
       isText: isText,
       isPara: isPara,
       isList: isList,
+      isTable: makePredByNodeName('TABLE'),
+      isCell: isCell,
       isAnchor: makePredByNodeName('A'),
       isDiv: makePredByNodeName('DIV'),
       isLi: makePredByNodeName('LI'),
@@ -337,6 +387,7 @@ define(['core/func', 'core/list', 'core/agent'], function (func, list, agent) {
       listAncestor: listAncestor,
       listNext: listNext,
       listPrev: listPrev,
+      listDescendant: listDescendant,
       commonAncestor: commonAncestor,
       listBetween: listBetween,
       insertAfter: insertAfter,

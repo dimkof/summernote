@@ -5,7 +5,7 @@
         bold: 'Tebal',
         italic: 'Miring',
         underline: 'Garis bawah',
-        strike: 'Coret',
+        strikethrough: 'Coret',
         clear: 'Bersihkan gaya',
         height: 'Jarak baris',
         size: 'Ukuran font'
@@ -21,7 +21,8 @@
         floatNone: 'Tidak ada perataan',
         dragImageHere: 'Tarik gambar pada area ini',
         selectFromFiles: 'Pilih gambar dari berkas',
-        url: 'URL gambar'
+        url: 'URL gambar',
+        remove: 'Hapus Gambar'
       },
       link: {
         link: 'Tautan',
